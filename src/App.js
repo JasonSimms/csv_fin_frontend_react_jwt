@@ -1,10 +1,17 @@
 import logo from './logo.svg';
 import './App.css';
+import 'semantic-ui-css/semantic.min.css'
+
+import { Login, Register, Profile } from './components/index';
 
 function App() {
+  console.log(Login);
   return (
     <div className="App">
-      <header className="App-header">
+        <Login/>
+        <Register />
+        <Profile />
+      {/* <header className="App-header">
         <img src={logo} className="App-logo" alt="logo" />
         <p>
           Edit <code>src/App.js</code> and save to reload.
@@ -17,7 +24,8 @@ function App() {
         >
           Learn React
         </a>
-      </header>
+        <Login/>
+      </header> */}
     </div>
   );
 }
