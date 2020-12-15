@@ -17,8 +17,8 @@ function Example() {
   function foo() {
       console.log('Foo it!');
       TransactionService.getTransactions().then(res => {
-          console.log('RES IS..',res);
-          return setTransaction(res)
+          console.log('RES IS..',res.data);
+          return setTransaction(res.data)
 
       })
     //   return setTransaction(["foo"])
