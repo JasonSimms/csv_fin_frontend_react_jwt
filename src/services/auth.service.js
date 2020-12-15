@@ -1,6 +1,8 @@
 import axios from "axios";
 //TODO SET API
-const API_URL = "http://localhost:8080/api/auth";
+// const API_URL = "http://localhost:8080/api/auth";
+const API_URL = "https://cc-vendors-api.herokuapp.com";
+
 
 class AuthService {
     login(email, password) {

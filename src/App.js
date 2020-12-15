@@ -1,33 +1,37 @@
-import logo from './logo.svg';
-import './App.css';
-import 'semantic-ui-css/semantic.min.css'
 
-import { Login, Register, Profile } from './components/index';
+import React, { Component, useState } from "react";
+import { Switch, Route, Link } from "react-router-dom";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "./App.css";
 
-function App() {
-  console.log(Login);
+import AuthService from "./services/auth.service";
+import TransactionService from "./services/transaction.service";
+
+import { Login, Register, Home, Profile, BoardUser, BoardModerator, BoardAdmin } from "./components/index";
+
+
+function Example() {
+  // Declare a new state variable, which we'll call "count"  
+  const [transactions, setTransaction] = useState([]);
+
+  function foo() {
+      console.log('Foo it!');
+      TransactionService.getTransactions().then(res => {
+          console.log('RES IS..',res);
+          return setTransaction(res)
+
+      })
+    //   return setTransaction(["foo"])
+  }
+  
   return (
-    <div className="App">
-        <Login/>
-        <Register />
-        <Profile />
-      {/* <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-        <Login/>
-      </header> */}
+    <div>
+      <p>You clicked {JSON.stringify(transactions)} times</p>
+      <button onClick={foo}>
+        Click me
+      </button>
     </div>
   );
 }
 
-export default App;
+export default Example;
