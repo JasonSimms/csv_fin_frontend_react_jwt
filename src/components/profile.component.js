@@ -13,7 +13,7 @@ export default class Profile extends Component {
   render() {
     const { currentUser } = this.state;
     if(!currentUser) return <div><h2>NO current user for profile</h2></div>
-
+    console.log(currentUser)
     return (
       <div className="container">
         <header className="jumbotron">
@@ -23,8 +23,9 @@ export default class Profile extends Component {
         </header>
         <p>
           <strong>Token:</strong>{" "}
-          {currentUser.accessToken.substring(0, 20)} ...{" "}
-          {currentUser.accessToken.substr(currentUser.accessToken.length - 20)}
+          {currentUser.token}
+          {/* {currentUser.token.substring(0, 20)} ...{" "}
+          {currentUser.token.substr(currentUser.token.length - 20)} */}
         </p>
         <p>
           <strong>Id:</strong>{" "}
