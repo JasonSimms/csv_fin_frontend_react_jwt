@@ -1,5 +1,5 @@
 
-import React, { Component, useState } from "react";
+import React, { Component, useState, useEffect, useLocalStorage } from "react";
 import { Switch, Route, Link } from "react-router-dom";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "./App.css";
@@ -10,22 +10,47 @@ import TransactionService from "./services/transaction.service";
 import { Login, Register, Home, Profile, BoardUser, BoardModerator, BoardAdmin } from "./components/index";
 
 
+// function useStickyState(defaultValue, key) {
+//   const [value, setValue] = useState(() => {
+//     const stickyValue = window.localStorage.getItem(key);
+//     console.log("wtf?", stickyValue, "::::: ", defaultValue)
+
+//     return !!stickyValue ? JSON.parse(stickyValue) : defaultValue;
+//   });
+
+//   React.useEffect(() => {
+//     window.localStorage.setItem(key, JSON.stringify(value));
+//   }, [key, value])
+
+//   return [value, setValue];
+// }
+
+
 function Example() {
   // Declare a new state variables 
   const [transactions, setTransaction] = useState([]);
   const [showModeratorBoard, setShowModeratorBoard] = useState(false);
   const [showAdminBoard, setShowAdminBoard] = useState(false);
-  const [currentUser, setUser] = useState(null);
+  const [currentUser, setUser] = useState(() => localStorage.getItem("user", null));
+
+  useEffect(() => {
+    localStorage.setItem("user", currentUser);
+  }, [currentUser]);
 
 
-  function foo() {
-    console.log('Foo it!');
-    TransactionService.getTransactions().then(res => {
-      console.log('RES IS..', res.data);
-      return setTransaction(res.data);
-    })
-    //   return setTransaction(["foo"])
+  function logOut() {
+    AuthService.logout();
+    setUser(null);
   }
+
+  // function foo() {
+  //   console.log('Foo it!');
+  //   TransactionService.getTransactions().then(res => {
+  //     console.log('RES IS..', res.data);
+  //     return setTransaction(res.data);
+  //   })
+  //   //   return setTransaction(["foo"])
+  // }
 
   
   return (
@@ -75,14 +100,13 @@ function Example() {
           <div className="navbar-nav ml-auto">
             <li className="nav-item">
               <Link to={"/profile"} className="nav-link">
-                DBUG{JSON.stringify(currentUser)}
                 {currentUser.email}
                 {currentUser._id}
 
               </Link>
             </li>
             <li className="nav-item">
-              <a href="/login" className="nav-link" onClick={this.logOut}>
+              <a href="/login" className="nav-link" onClick={logOut}>
                 LogOut
                 </a>
             </li>
@@ -108,7 +132,8 @@ function Example() {
       <div className="container mt-3">
         <Switch>
           <Route exact path={["/", "/home"]} component={Home} />
-          <Route exact path="/login" component={Login} />
+          <Route exact path="/login" render={props => <Login {...props} setUser={setUser}/>} />
+          {/* <Route path="/life" render={props => <Life sayHello = {this.sayHello} />}/> */}
           <Route exact path="/register" component={Register} />
           <Route exact path="/profile" component={Profile} />
           <Route path="/user" component={BoardUser} />
