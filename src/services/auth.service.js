@@ -11,15 +11,10 @@ class AuthService {
         return axios.post(API_URL + 'login', {
             email, password
         }).then(res => {
-            console.log("hmm..", res.data, Object.keys(res.data))
-            console.log('token?')
-            console.log(res.data.data.token)
             if (res.data.data.token) {
-                console.log("i have a token...")
                 localStorage.setItem('user', JSON.stringify(res.data.data));
             }
-
-            return res.data;
+            return res.data.data;
         })
     }
 

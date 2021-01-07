@@ -98,10 +98,19 @@ export default class Register extends Component {
         this.state.password
       ).then(
         response => {
-          this.setState({
-            message: response.data.message,
-            successful: true
-          });
+          console.log(response)
+          if (response.data.token) {
+            localStorage.setItem('debug', true);
+
+            localStorage.setItem('user', JSON.stringify(response.data));
+            this.props.setUser(response.data);
+            this.props.history.push("/home");
+
+            // this.setState({
+            //   message: response.message,
+            //   successful: true
+            // });
+          }
         },
         error => {
           const resMessage =
@@ -178,7 +187,7 @@ export default class Register extends Component {
                   }
                   role="alert"
                 >
-                  {this.state.message}
+                  Outcome?{this.state.message}
                 </div>
               </div>
             )}

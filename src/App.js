@@ -33,9 +33,9 @@ function Example() {
   const [showAdminBoard, setShowAdminBoard] = useState(false);
   const [currentUser, setUser] = useState(() => localStorage.getItem("user", null));
 
-  useEffect(() => {
-    localStorage.setItem("user", currentUser);
-  }, [currentUser]);
+  // useEffect(() => {
+  //   localStorage.setItem("user", currentUser);
+  // }, [currentUser]);
 
 
   function logOut() {
@@ -134,7 +134,7 @@ function Example() {
           <Route exact path={["/", "/home"]} component={Home} />
           <Route exact path="/login" render={props => <Login {...props} setUser={setUser}/>} />
           {/* <Route path="/life" render={props => <Life sayHello = {this.sayHello} />}/> */}
-          <Route exact path="/register" component={Register} />
+          <Route exact path="/register" render={props => <Register {...props} setUser={setUser}/>} />
           <Route exact path="/profile" component={Profile} />
           <Route path="/user" component={BoardUser} />
           <Route path="/mod" component={BoardModerator} />
