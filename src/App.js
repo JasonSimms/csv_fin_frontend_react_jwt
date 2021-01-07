@@ -31,7 +31,7 @@ function Example() {
   const [transactions, setTransaction] = useState([]);
   const [showModeratorBoard, setShowModeratorBoard] = useState(false);
   const [showAdminBoard, setShowAdminBoard] = useState(false);
-  const [currentUser, setUser] = useState(() => localStorage.getItem("user", null));
+  const [currentUser, setUser] = useState(() => JSON.parse(localStorage.getItem("user", null)));
 
   // useEffect(() => {
   //   localStorage.setItem("user", currentUser);
@@ -87,13 +87,13 @@ function Example() {
             </li>
           )}
 
-          {currentUser && (
+          {/* {currentUser && (
             <li className="nav-item">
               <Link to={"/user"} className="nav-link">
                 User
                 </Link>
             </li>
-          )}
+          )} */}
         </div>
 
         {currentUser ? (
@@ -128,17 +128,15 @@ function Example() {
           )}
       </nav>
 
-          <div>Hello world 3<b>{process.env.NODE_ENV} {JSON.stringify(process.env)}</b></div>
       <div className="container mt-3">
         <Switch>
-          <Route exact path={["/", "/home"]} component={Home} />
+          <Route exact path={["/", "/home"]} render={props => <Home {...props} user={currentUser} />} />
           <Route exact path="/login" render={props => <Login {...props} setUser={setUser}/>} />
-          {/* <Route path="/life" render={props => <Life sayHello = {this.sayHello} />}/> */}
           <Route exact path="/register" render={props => <Register {...props} setUser={setUser}/>} />
           <Route exact path="/profile" component={Profile} />
-          <Route path="/user" component={BoardUser} />
+          {/* <Route path="/user" component={BoardUser} />
           <Route path="/mod" component={BoardModerator} />
-          <Route path="/admin" component={BoardAdmin} />
+          <Route path="/admin" component={BoardAdmin} /> */}
         </Switch>
       </div>
     </div>
