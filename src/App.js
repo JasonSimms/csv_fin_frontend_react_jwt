@@ -7,7 +7,7 @@ import "./App.css";
 import AuthService from "./services/auth.service";
 import TransactionService from "./services/transaction.service";
 
-import { Login, Register, Home, Profile, BoardUser, BoardModerator, BoardAdmin } from "./components/index";
+import { Upload, Login, Register, Home, Profile, BoardUser, BoardModerator, BoardAdmin } from "./components/index";
 
 
 // function useStickyState(defaultValue, key) {
@@ -100,8 +100,8 @@ function Example() {
           <div className="navbar-nav ml-auto">
             <li className="nav-item">
               <Link to={"/profile"} className="nav-link">
-                {currentUser.email}
-                {currentUser._id}
+                EMAIL : {currentUser.email}  
+                ID:  {currentUser._id}
 
               </Link>
             </li>
@@ -130,10 +130,12 @@ function Example() {
 
       <div className="container mt-3">
         <Switch>
-          <Route exact path={["/", "/home"]} render={props => <Home {...props} user={currentUser} />} />
+          {/* <Route exact path={["/", "/home"]} render={props => <Home {...props} user={currentUser} />} /> */}
           <Route exact path="/login" render={props => <Login {...props} setUser={setUser}/>} />
           <Route exact path="/register" render={props => <Register {...props} setUser={setUser}/>} />
           <Route exact path="/profile" component={Profile} />
+          <Route exact path={["/", "/home"]} render={props => <Upload {...props} user={currentUser} />} />
+
           {/* <Route path="/user" component={BoardUser} />
           <Route path="/mod" component={BoardModerator} />
           <Route path="/admin" component={BoardAdmin} /> */}

@@ -7,5 +7,6 @@ import BoardUser from './board-user.component';
 import BoardAdmin from "./board-admin.component";
 import BoardModerator from "./board-moderator.component";
 import Home from "./home.component";
+import Upload from "./csv-upload.component";
 
-export { Login, Profile, Register, BoardAdmin, BoardModerator, Home, BoardUser };
+export { Upload, Login, Profile, Register, BoardAdmin, BoardModerator, Home, BoardUser };
