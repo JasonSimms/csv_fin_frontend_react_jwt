@@ -5,60 +5,68 @@ import CSVReader from 'react-csv-reader';
 import UserService from "../services/user.service";
 import TransactionService from "../services/transaction.service";
 import AuthService from "../services/auth.service";
+import VendorService from "../services/vendor.service";
 
-import getInputCard from "./category-card.component";
+import TransactionCategorize from "./category-card.component";
 
 
 function Upload(props) {
     const [message, setMessage] = useState("Grusse");
     const [transactions, setTransactions] = useState([]);
-    const [count, setCount] = useState(0);
-    const [vendors, setVendors] = useState([])
 
     const dummyVendors = [{ "description": "STANDARD 5 & 10 ACE SAN FRANCISCO CA", "category": "utilities" }];
+    const [vendors, setVendors] = useState([dummyVendors]);
+    const [newVendors, setNewVendors] = useState([]);
+
 
     function getCategory(obj) {
         let identifier = obj.Description;
-        let knownVendor = dummyVendors.find(el => el.description === identifier)
+        let knownVendor = vendors.find(el => el.description === identifier)
         return knownVendor ? knownVendor.category : null;
     }
 
-    function parseCitiArr(arr){
+    function parseCitiArr(arr) {
         let userId = AuthService.getCurrentUser()._id;
         return arr.map(o => {
+            if (Object.keys(o).includes("description")) return o;
             return {
-                description : o.Description, 
-                credit : o.Credit, 
-                debit : o.Debit, 
+                description: o.Description,
+                credit: o.Credit,
+                debit: o.Debit,
                 date: o.Date,
                 category: getCategory(o),
-                userId}
+                userId
+            }
         })
     }
 
-    function assignCategoryToVendors(vendor, category) {
-        let newTransactions = transactions.map(el =>{
-            if(el.description == vendor) return {...el, category : category};
-            else return el;
-        });
 
-        setTransactions(newTransactions);
+    function handleFileUpload(data, fileDate) {
+        const parsedData = parseCitiArr(data);
+        setTransactions(parsedData);
+        let newVendors = []
+        parsedData.filter(el => !el.category)
+            .forEach(el => {
+                var i = newVendors.findIndex(x => x.description == el.description);
+                if (i <= -1) newVendors.push(el)
+            });
+        return setNewVendors(newVendors);
     }
 
-    function getCategoryFromUser() {
-        if (!transactions || !transactions.length) return null;
-        let newVendor = transactions.find(el => !el.category);
-        try {
-            return getInputCard(newVendor, assignCategoryToVendors);
-
-        } catch (error) {
-            return (
-                <div>
-                    <h1>Error!</h1>
-                {JSON.stringify(error)}
-                </div>)
-        }
+    function submitCategorizedVendors(newVendors) {
+        console.log('init submit cats',newVendors );
+        //API CALL TO SUBMIT NEW VENDORS LIST
+        VendorService.submitNewVendors(newVendors).then(vendors => {
+            const newTransactions = transactions.map(el => {if(!el.category) el.category = getCategory(el)});
+            console.log('debug>>',newTransactions.filter(el => !el.category))
+            setTransactions(newTransactions);
+            setNewVendors([]);
+        })
+        
     }
+
+
+
 
 
 
@@ -99,14 +107,12 @@ function Upload(props) {
     return (
         <div>
             Message: {message};
-            {/* {transactionList(transactions)} */}
-
-            {/* {CategoryInput()} */}
-            {/* {getCategoryFromUser()} */}
-            {JSON.stringify(transactions)}
+            {/* {JSON.stringify(transactions)} */}
+            <TransactionCategorize newVendors={newVendors} submitCategorizedVendors={submitCategorizedVendors} />
             <CSVReader
                 parserOptions={{ header: true }}
-                onFileLoaded={(data, fileInfo) => setTransactions(parseCitiArr(data))} />
+                onFileLoaded={handleFileUpload}
+            />
             {/* <CSVReader
                 onDrop={data => console.log(data)}
                 // onError={this.handleOnError}
